@@ -32,22 +32,24 @@ class CustomKeyError(CustomException):
         super().__init__(message)
 
 
-class CommandValidator:
-    VALID_COMMANDS = ["hello", "add", "all",
-                      "change", "phone", "close", "exit", "help"]
+class BirthdayError(CustomException):
+    def __init__(self, birthday):
+        self.birthday = birthday
+        message = f'Invalid date format. Use DD.MM.YYYY{
+            birthday}'
+        super().__init__(message)
 
-    def __init__(self, command, args):
+
+class CommandValidator:
+    VALID_COMMANDS = ["hello", "add", "all", "change", "phone", "close",
+                      "exit", "help", "add-birthday", "show-birthday", "birthdays", "change"]
+
+    def __init__(self, command):
         self.command = command
-        self.args = args
 
     def validate_command(self):
         if self.command not in self.VALID_COMMANDS:
             raise ValueError(f"I dont have this command: {self.command}")
 
-    def validate_args(self):
-        if not self.args:
-            raise ValueError("No arguments provided")
-
     def validate(self):
         self.validate_command()
-        self.validate_args()

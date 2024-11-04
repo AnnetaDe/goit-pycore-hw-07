@@ -1,5 +1,8 @@
 from errors import input_error
 from helper_errors_classes import ArgsNotEnought, CustomKeyError,  CustomAlreadyExistsError
+from task1_hw_07 import Name, Phone, Record, AddressBook
+
+my_address_book = AddressBook()
 
 
 def normalize_input(user_input):
@@ -20,61 +23,83 @@ def parse_input(user_input):
 
 
 @input_error
-def add_contact(args, contacts):
-    if len(args) != 2:
-        raise ArgsNotEnought(args)
-    name, phone = args
-    if name in contacts:
-        raise CustomAlreadyExistsError(name)
-
-    contacts[name] = phone
-    return f"Contact added {name} - {phone}."
+def add_contact():
+    user_input_name = input("Enter a name: ")
+    user_input_phone = input("Enter a phone number: ")
+    name = Name(user_input_name)
+    phone = Phone(user_input_phone)
+    record = Record(name, phone)
+    return record
 
 
-def all_contacts(contacts):
-
-    for name, phone in contacts.items():
-        yield (f'{name} - {phone}')
+def all_contacts():
+    print(my_address_book)
 
 
 @input_error
-def change_username_phone(args, contacts):
-    print('args', args)
-    if len(args) != 2:
-        raise ArgsNotEnought(args)
-    if args[0] not in contacts:
-        raise CustomKeyError(args[0])
-    name, phone = args
-    contacts[name] = phone if name in contacts else None
-    return f"Contact changed, new contact is: {name} - {phone}."
+def change_record_phone():
+    name_of_contact = input("Enter a name of contact: ")
+    new_phone = input("Enter a new phone number: ")
+    my_address_book.change_record_phone(name_of_contact, new_phone)
 
 
 @input_error
-def phone_by_name(args, contacts):
-    print('args', args)
-    name = args[0]
-    if name not in contacts:
-        raise CustomKeyError(name)
-
-    return contacts.get(name, "Contact not found.")
+def change_record_name():
+    name_of_contact = input("Enter a name of contact: ")
+    my_address_book.change_record_name(name_of_contact)
 
 
-def execute_command(command, args, contacts):
+def change_alias():
+    name_of_contact = input("Enter a name of contact: ")
+    my_address_book.change_alias(name_of_contact)
+
+
+def add_birthday():
+    name_of_contact = input("Enter a name of contact: ")
+    birthday = input("Enter a birthday: ")
+    my_address_book.add_birthday(name_of_contact, birthday)
+
+
+def phone():
+    name_of_contact = input("Enter a name of contact: ")
+    my_address_book.find_record(name_of_contact)
+
+
+def show_birthday():
+    name_of_contact = input("Enter a name of contact: ")
+
+    my_address_book.show_birthday(name_of_contact)
+
+
+def birthdays():
+    my_address_book.show_birthdays()
+
+
+def execute_command(command):
     if command in ["close", "exit"]:
         print("Good bye!")
         return
     elif command == "hello":
         print("How can I help you?")
     elif command == "add":
-        print(add_contact(args, contacts))
+        add_contact()
     elif command == "all":
-        for contact in all_contacts(contacts):
-            print(contact)
+        all_contacts()
     elif command == "change":
-        print(change_username_phone(args, contacts))
+        user_input = normalize_input(
+            input("what do you want to change? name or phone(n/p):  "))
+        if user_input == "n":
+            change_record_name()
+        elif user_input == "p":
+            change_record_phone()
+
     elif command == "phone":
-        print(phone_by_name(args, contacts))
-    elif command == "phone":
-        print(phone_by_name(args, contacts))
+        phone()
+    elif command == "show-birthday":
+        show_birthday()
+    elif command == "birthdays":
+        birthdays()
+
+        pass
     elif command == "help":
         print("Commands: hello, add, all, change, phone, close, exit, help")

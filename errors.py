@@ -1,6 +1,6 @@
 
 
-from helper_errors_classes import ArgsNotEnought, CustomAlreadyExistsError, CustomAttributeError, CustomKeyError
+from helper_errors_classes import ArgsNotEnought, BirthdayError, CustomAlreadyExistsError, CustomAttributeError, CustomKeyError
 
 
 def input_error(func):
@@ -17,6 +17,8 @@ def input_error(func):
         except CustomAlreadyExistsError() as e:
             return f'{e}'
         except ValueError as e:
+            return e
+        except BirthdayError() as e:
             return e
 
         except Exception as e:
