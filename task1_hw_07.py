@@ -30,7 +30,7 @@ class Name(Field):
 
 class Phone(Field):
     def __init__(self, value):
-        self.value = value
+        self._value = value
 
     @property
     def value(self):
@@ -43,6 +43,10 @@ class Phone(Field):
 
     def __str__(self):
         return self.value if self.value else "No phone number added"
+
+
+my_phone = Phone("1234567890")
+print('phone.getter', my_phone.value)
 
 
 class Birthday(Field):
@@ -62,27 +66,19 @@ class Birthday(Field):
         return self._value if self._value else "No birthday added"
 
 
-class Record:
+class Record(Name, Phone, Birthday):
     def __init__(self, name, phone, birthday=None):
-        self.name = name
-        self.birthday = None
+        self.name = Name(name)
+        self.birthday = Birthday(birthday)
         self._phones_dict = {}
         if phone:
             self.add_phone(phone)
         if birthday:
-            self.birthday = birthday
+            self.add_record_birthday(birthday)
 
     @property
     def phones_dict(self):
         return self._phones_dict
-
-    @property
-    def birthday(self):
-        return self._birthday
-
-    @birthday.setter
-    def birthday(self, birthday):
-        self._birthday = birthday
 
     def add_phone(self, phone, phone_alias=None):
         print(f"Adding phone number {phone} to record: {self.name}")
@@ -90,9 +86,10 @@ class Record:
             "You can add a phone alias for this phone number or press Enter to skip: ")
         phone_key = self.normalize_input(phone_alias) if phone_alias else f"{
             len(self.phones_dict.keys()) + 1}"
-        self.phones_dict[phone_key] = phone
+        new_phone = Phone(phone)
+        self.phones_dict[phone_key] = new_phone
         print(f"Phone number added to record: {self.name}, phone alias: {phone_key}",
-              f"phone: {phone.value}")
+              f"phone: {new_phone.value}")
         return self.phones_dict
 
     def change_phone_alias(self, new_alias):
@@ -137,17 +134,22 @@ class Record:
             print("No phone number changed")
             return
 
-        if self.normalize_key(what_to_change) in self.phones_dict.keys():
+        if self.normalize_input(what_to_change) in self.phones_dict.keys():
             new_phone = input("Enter new phone number: ")
             self.phones_dict[what_to_change] = new_phone
             print(f"Phone number changed: {new_phone}")
+            return self.phones_dict
 
-    def add_birthday(self, birthday):
+    def add_record_birthday(self, birthday):
         self.birthday = Birthday(birthday)
         print(f"Birthday added: {birthday}")
 
     def show_birthday(self):
         print(f"{self.name}\n BIRTHDAY: {self.birthday}")
+
+    def show_all_record_phones(self):
+        for key, phone in self.phones_dict.items():
+            print(f"show{key}: {phone.value}")
 
     def __str__(self):
         phones = ", ".join(f"{key}: {phone}" for key,
@@ -161,12 +163,22 @@ class Record:
         return key.lower().strip()
 
 
+# my_record = Record("J", "1234567890", "01.01.2000")
+# my_record.add_phone("0987654321")
+
+# my_record.show_all_record_phones()
+# print(my_record.name)
+# print(my_record.birthday)
+# print(my_record.phones_dict)
+
+
 class AddressBook:
     def __init__(self):
         self.records = set()
 
     def add_record(self, record):
         self.records.add(record)
+        print(f"Record added: {record}")
 
     def prompt_add_new_record(self, name):
         user_input = input(
@@ -218,12 +230,15 @@ class AddressBook:
     def find_record(self, name):
         print(f"Searching for {name} in records...")
         for record in self.records:
-            phones = list(value.value for value in record.phones_dict.values())
-            print(phones)
             if record.name.value == name:
                 return record
+            return self.prompt_add_new_record(name)
 
-        # return self.prompt_add_new_record(name)
+    def show_record_phones(self, name):
+        record = self.find_record(name)
+        if record:
+            record.show_all_record_phones()
+            return record
 
     def find_record_by_phone(self, phone):
         for record in self.records:
@@ -307,10 +322,14 @@ class AddressBook:
     def add_birthday(self, name, birthday):
         record = self.find_record(name)
         if record:
-            record.add_birthday(birthday)
+            record.add_record_birthday(birthday)
             return record
 
     def __str__(self):
         if not self.records:
             return "No records found."
         return '\n'.join(str(record) for record in self.records)
+
+
+# my_address_book = AddressBook()
+# my_address_book.add_record(record=my_record)

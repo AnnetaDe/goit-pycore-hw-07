@@ -1,6 +1,6 @@
 from errors import input_error
 from helper_errors_classes import ArgsNotEnought, CustomKeyError,  CustomAlreadyExistsError
-from task1_hw_07 import Name, Phone, Record, AddressBook
+from task1_hw_07 import Birthday, Name, Phone, Record, AddressBook
 
 my_address_book = AddressBook()
 
@@ -23,13 +23,12 @@ def parse_input(user_input):
 
 
 @input_error
-def add_contact():
-    user_input_name = input("Enter a name: ")
-    user_input_phone = input("Enter a phone number: ")
-    name = Name(user_input_name)
-    phone = Phone(user_input_phone)
-    record = Record(name, phone)
-    return record
+def add_record():
+    name = input("Enter a name: ")
+    phone = input("Enter a phone number: ")
+    birthday = input("Enter a birthday in format DD.MM.YYYY: ")
+    record = Record(name, phone, birthday)
+    my_address_book.add_record(record)
 
 
 def all_contacts():
@@ -40,6 +39,7 @@ def all_contacts():
 def change_record_phone():
     name_of_contact = input("Enter a name of contact: ")
     new_phone = input("Enter a new phone number: ")
+
     my_address_book.change_record_phone(name_of_contact, new_phone)
 
 
@@ -55,6 +55,7 @@ def change_alias():
 
 
 def add_birthday():
+    print("Enter a birthday in format DD.MM.YYYY")
     name_of_contact = input("Enter a name of contact: ")
     birthday = input("Enter a birthday: ")
     my_address_book.add_birthday(name_of_contact, birthday)
@@ -63,6 +64,11 @@ def add_birthday():
 def phone():
     name_of_contact = input("Enter a name of contact: ")
     my_address_book.find_record(name_of_contact)
+
+
+def show_record_phones():
+    name_of_contact = input("Enter a name of contact: ")
+    my_address_book.show_record_phones(name_of_contact)
 
 
 def show_birthday():
@@ -82,9 +88,11 @@ def execute_command(command):
     elif command == "hello":
         print("How can I help you?")
     elif command == "add":
-        add_contact()
+        add_record()
     elif command == "all":
         all_contacts()
+    elif command == 'all-phones':
+        show_record_phones()
     elif command == "change":
         user_input = normalize_input(
             input("what do you want to change? name or phone(n/p):  "))
@@ -99,7 +107,9 @@ def execute_command(command):
         show_birthday()
     elif command == "birthdays":
         birthdays()
+    elif command == "add-b":
+        add_birthday()
 
         pass
     elif command == "help":
-        print("Commands: hello, add, all, change, phone, close, exit, help")
+        print("Commands: hello, add, all, change, phone, close, exit, help, add-b, show-birthday, birthdays")
