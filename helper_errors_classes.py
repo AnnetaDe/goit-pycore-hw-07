@@ -42,7 +42,7 @@ class BirthdayError(CustomException):
 
 class CommandValidator:
     VALID_COMMANDS = ["hello", "add", "all", "change", "phone", "close",
-                      "exit", "help", "add-b", "show-birthday", "birthdays", "change", "all-phones"]
+                      "exit", "help", "add-b", "show-birthday", "birthdays", "change", "all-phones", "add-p"]
 
     def __init__(self, command):
         self.command = command

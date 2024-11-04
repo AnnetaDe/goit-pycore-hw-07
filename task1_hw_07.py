@@ -45,10 +45,6 @@ class Phone(Field):
         return self.value if self.value else "No phone number added"
 
 
-my_phone = Phone("1234567890")
-print('phone.getter', my_phone.value)
-
-
 class Birthday(Field):
     def __init__(self, birthday):
         self.value = birthday
@@ -163,15 +159,6 @@ class Record(Name, Phone, Birthday):
         return key.lower().strip()
 
 
-# my_record = Record("J", "1234567890", "01.01.2000")
-# my_record.add_phone("0987654321")
-
-# my_record.show_all_record_phones()
-# print(my_record.name)
-# print(my_record.birthday)
-# print(my_record.phones_dict)
-
-
 class AddressBook:
     def __init__(self):
         self.records = set()
@@ -179,6 +166,13 @@ class AddressBook:
     def add_record(self, record):
         self.records.add(record)
         print(f"Record added: {record}")
+
+    def add_phone(self, name, phone):
+        record = self.find_record(name)
+        if record:
+            record.add_phone(phone)
+            print(f"Updated record: {record}")
+            return record
 
     def prompt_add_new_record(self, name):
         user_input = input(
@@ -292,7 +286,7 @@ class AddressBook:
         upcoming_week_birthdays = []
         for record in self.records:
             if record.birthday.value:
-                birthday = datetime.strptime(record.birthday, "%d.%m.%Y")
+                birthday = datetime.strptime(record.birthday.value, "%d.%m.%Y")
                 current_year = datetime.now().year
                 congratulation_date = birthday.replace(year=current_year)
 

@@ -39,7 +39,6 @@ def all_contacts():
 def change_record_phone():
     name_of_contact = input("Enter a name of contact: ")
     new_phone = input("Enter a new phone number: ")
-
     my_address_book.change_record_phone(name_of_contact, new_phone)
 
 
@@ -49,9 +48,10 @@ def change_record_name():
     my_address_book.change_record_name(name_of_contact)
 
 
-def change_alias():
+def add_phone():
     name_of_contact = input("Enter a name of contact: ")
-    my_address_book.change_alias(name_of_contact)
+    phone = input("Enter a phone number: ")
+    my_address_book.add_phone(name_of_contact, phone)
 
 
 def add_birthday():
@@ -109,7 +109,8 @@ def execute_command(command):
         birthdays()
     elif command == "add-b":
         add_birthday()
+    elif command == 'add-p':
+        add_phone()
 
-        pass
     elif command == "help":
         print("Commands: hello, add, all, change, phone, close, exit, help, add-b, show-birthday, birthdays")

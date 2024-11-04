@@ -18,8 +18,6 @@ def input_error(func):
             return f'{e}'
         except ValueError as e:
             return e
-        except BirthdayError() as e:
-            return e
 
         except Exception as e:
             return f"unexpected error {e}"
