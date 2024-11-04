@@ -291,7 +291,7 @@ class AddressBook:
     def show_birthdays(self):
         upcoming_week_birthdays = []
         for record in self.records:
-            if record.birthday:
+            if record.birthday.value:
                 birthday = datetime.strptime(record.birthday, "%d.%m.%Y")
                 current_year = datetime.now().year
                 congratulation_date = birthday.replace(year=current_year)
